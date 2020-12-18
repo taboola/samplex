@@ -1,4 +1,4 @@
-package com.taboola.samplex.schemafilter;
+package com.taboola.schemafilter;
 
 import java.io.Serializable;
 

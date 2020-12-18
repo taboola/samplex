@@ -1,4 +1,4 @@
-package samplex;
+package com.taboola.samplex;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;

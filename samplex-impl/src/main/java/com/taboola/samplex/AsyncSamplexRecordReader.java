@@ -1,4 +1,4 @@
-package samplex;
+package com.taboola.samplex;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

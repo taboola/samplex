@@ -1,4 +1,4 @@
-package samplex;
+package com.taboola.samplex;
 
 import org.apache.avro.generic.GenericData.Record;
 

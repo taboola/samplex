@@ -1,10 +1,10 @@
-package com.taboola.samplex.schemafilter;
+package com.taboola.schemafilter;
 
 import java.util.Set;
 
 public class RecursiveIteratingSchemaBlacklistFilter extends RecursiveIteratingSchemaFilter {
 
-    private Set<String> blacklist;
+    private final Set<String> blacklist;
 
     public RecursiveIteratingSchemaBlacklistFilter(Set<String> blacklist) {
         this.blacklist = blacklist;

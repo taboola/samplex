@@ -1,4 +1,9 @@
-package com.taboola.taz.analyzers.utils;
+package com.taboola.schemafilter;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,15 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import com.taboola.taz.analyzers.utils.schemafilter.TopLevelFieldsSchemaBlacklistFilter;
-import com.taboola.testing.BaseUnitTest;
 
-public class TopLevelFieldsSchemaBlacklistFilterTest extends BaseUnitTest {
-    private static String schema = "{\"type\":\"record\",\"name\":\"spark_schema\",\"fields\":[{\"name\":\"pv_commonGeoRegionId\",\"type\":[\"long\",\"null\"]},{\"name\":\"pv_consentDaisyBit\",\"type\":[\"string\",\"null\"]},{\"name\":\"pv_country\",\"type\":[\"string\",\"null\"]},{\"name\":\"pv_countryCode\",\"type\":[\"string\",\"null\"]},{\"name\":\"pv_crossDeviceControlGroup\",\"type\":[\"boolean\",\"null\"]},{\"name\":\"pv_ctrModelConfigLabel\",\"type\":[\"string\",\"null\"]},{\"name\":\"pv_deviceId\",\"type\":[\"string\",\"null\"]}]}";
-    private JSONObject jsonSchema = new JSONObject(schema);
-
-    public TopLevelFieldsSchemaBlacklistFilterTest() throws JSONException {
-    }
+public class TopLevelFieldsSchemaBlacklistFilterTest {
+    private static final String schema = "{\"type\":\"record\",\"name\":\"spark_schema\",\"fields\":[{\"name\":\"geoRegionId\",\"type\":[\"long\",\"null\"]},{\"name\":\"consentBit\",\"type\":[\"string\",\"null\"]},{\"name\":\"country\",\"type\":[\"string\",\"null\"]},{\"name\":\"countryCode\",\"type\":[\"string\",\"null\"]},{\"name\":\"isControlGroup\",\"type\":[\"boolean\",\"null\"]},{\"name\":\"configLabel\",\"type\":[\"string\",\"null\"]},{\"name\":\"deviceId\",\"type\":[\"string\",\"null\"]}]}";
+    private final JSONObject jsonSchema = new JSONObject(schema);
 
     @Test
     public void filter_filterSetIsEmpty_returnUntouched() throws JSONException {
@@ -38,7 +38,7 @@ public class TopLevelFieldsSchemaBlacklistFilterTest extends BaseUnitTest {
 
     @Test
     public void filter_schemaHasFieldsFromFilterSet_returnFiltered() throws JSONException {
-        String fieldToFilter = "pv_commonGeoRegionId";
+        String fieldToFilter = "geoRegionId";
         Set<String> toFilter = new HashSet<>();
         toFilter.add("doesNotExist1");
         toFilter.add(fieldToFilter);
@@ -47,6 +47,6 @@ public class TopLevelFieldsSchemaBlacklistFilterTest extends BaseUnitTest {
         JSONObject filteredJson = new JSONObject(filteredSchema);
         assertNotEquals(jsonSchema.toString(), filteredJson.toString());
         assertFalse(filteredSchema.contains(fieldToFilter));
-        assertTrue(filteredSchema.contains("pv_consentDaisyBit"));
+        assertTrue(filteredSchema.contains("consentBit"));
     }
 }

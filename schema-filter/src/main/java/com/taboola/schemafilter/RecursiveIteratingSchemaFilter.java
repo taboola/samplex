@@ -1,4 +1,4 @@
-package com.taboola.samplex.schemafilter;
+package com.taboola.schemafilter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

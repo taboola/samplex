@@ -1,26 +1,31 @@
-package com.taboola.taz.analyzers.utils;
+package com.taboola.schemafilter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.avro.Schema;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+public class RecursiveIteratingSchemaWhitelistFilterTest {
 
-import com.taboola.taz.analyzers.utils.schemafilter.RecursiveIteratingSchemaWhitelistFilter;
-import com.taboola.testing.BaseUnitTest;
-import com.taboola.utils.FileUtils;
+    private static String schema;
+    private final JSONObject jsonSchema = new JSONObject(schema);
 
-public class RecursiveIteratingSchemaWhitelistFilterTest extends BaseUnitTest {
-
-    private static String schema = getSchema();
-    private JSONObject jsonSchema = new JSONObject(schema);
-
-    public RecursiveIteratingSchemaWhitelistFilterTest() throws JSONException {
+    @BeforeClass
+    public static void initSchema() throws IOException {
+        schema =  FileUtils.readFileToString(new File("src/test/resources/testSchema.json"));
     }
 
     @Test
@@ -93,10 +98,5 @@ public class RecursiveIteratingSchemaWhitelistFilterTest extends BaseUnitTest {
         assertEquals("additionalData", fields.get(0).name());
 
         assertNotNull(schema.getField(fieldToFilter4));
-    }
-    
-    private static String getSchema() {
-        String schema = FileUtils.readFileFromClasspath("schema-filter/testSchema.json");
-        return schema;
     }
 }
