@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import com.taboola.schemafilter.SchemaFilter;
 import com.taboola.schemafilter.TopLevelFieldsSchemaWhitelistFilter;
 
-public class SamplexAnalyzersExecutorTest {
+public class SamplexExecutorTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();

@@ -44,7 +44,7 @@ public class SamplexTestUtil {
         RecordBuilder<Schema> recordBuilder = SchemaBuilder.record("spark_schema").namespace(null);
         Schema dfAvroSchema = SchemaConverters.convertStructToAvro(rowDataset.schema(), recordBuilder, null);
 
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(samplexOutputFolder, "general_analyzer", samplexFilter, schemaFilter);
+        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(samplexOutputFolder, "general_job", samplexFilter, schemaFilter);
 
         List<SamplexContext> samplexContexts = Arrays.stream(inputFiles).map(i -> new SamplexContext(i, Collections.singletonList(specificContext), dfAvroSchema.toString())).collect(Collectors.toList());
         samplexMultiplexWriter.call(samplexContexts.iterator());
