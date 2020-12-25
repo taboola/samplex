@@ -8,7 +8,7 @@ Read Once - Write Many!
 Samplex was developed by [Taboola Infrastructure Engineering Team](https://discover.taboola.com/taboola-infrastructure-engineering/) as part of the effort 
 to optimize resource usages for saving sub-sets of huge data by different teams.
 
-## Why its needed   
+## Why It's needed   
 When working with extremely big inputs of raw data, it is often needed to create
 sub-set of it in order to keep work more efficient in downstream or to keep the relevant sub-set with longer retention.
 
