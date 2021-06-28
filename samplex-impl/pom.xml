@@ -22,12 +22,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.parquet</groupId>
-            <artifactId>parquet-avro</artifactId>
-            <version>1.11.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.taboola</groupId>
             <artifactId>schema-filter</artifactId>
             <version>1.0.0</version>
@@ -55,6 +49,18 @@
             <groupId>com.databricks</groupId>
             <artifactId>spark-avro_${scala.version}</artifactId>
             <version>4.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-avro-shaded</artifactId>
+            <version>1.11.1</version>
         </dependency>
 
         <dependency>

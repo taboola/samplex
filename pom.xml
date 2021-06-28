@@ -19,6 +19,7 @@
     </properties>
 
     <modules>
+        <module>parquet-avro-shaded</module>
         <module>samplex-impl</module>
         <module>schema-filter</module>
     </modules>

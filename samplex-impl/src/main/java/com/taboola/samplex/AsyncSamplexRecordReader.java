@@ -9,10 +9,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.parquet.avro.AvroParquetReader;
-import org.apache.parquet.avro.AvroReadSupport;
-import org.apache.parquet.avro.AvroSchemaConverter;
-import org.apache.parquet.hadoop.ParquetReader;
+import avro.shaded.org.apache.parquet.avro.AvroParquetReader;
+import avro.shaded.org.apache.parquet.avro.AvroReadSupport;
+import avro.shaded.org.apache.parquet.avro.AvroSchemaConverter;
+import avro.shaded.org.apache.parquet.hadoop.ParquetReader;
 
 
 public class AsyncSamplexRecordReader implements Runnable {

@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.parquet</groupId>
-            <artifactId>parquet-avro</artifactId>
+            <artifactId>parquet-avro-shaded</artifactId>
             <version>1.11.1</version>
         </dependency>
 

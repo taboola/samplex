@@ -8,10 +8,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.parquet.avro.AvroParquetWriter;
-import org.apache.parquet.hadoop.ParquetFileWriter.Mode;
-import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.hadoop.metadata.CompressionCodecName;
+import avro.shaded.org.apache.parquet.avro.AvroParquetWriter;
+import avro.shaded.org.apache.parquet.hadoop.ParquetFileWriter.Mode;
+import avro.shaded.org.apache.parquet.hadoop.ParquetWriter;
+import avro.shaded.org.apache.parquet.hadoop.metadata.CompressionCodecName;
 
 
 public class AsyncSamplexRecordWriter implements Runnable {
