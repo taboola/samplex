@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <!-- AGGREGATE POM - testing hook system test -->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.taboola</groupId>
+    <artifactId>samplex-root</artifactId>
+    <version>1.0.0</version>
+    <description>Spark Samplex - Read Once Write Many</description>
+    <name>samplex</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java-source-version>1.8</java-source-version>
+        <java-target-version>1.8</java-target-version>
+        <log4j2.version>2.14.0</log4j2.version>
+        <spark.version>3.1.2</spark.version>
+        <scala.version>2.12</scala.version>
+        <hadoop.client.version>3.2.1</hadoop.client.version>
+    </properties>
+
+    <modules>
+        <module>parquet-avro-shaded</module>
+        <module>samplex-impl</module>
+        <module>schema-filter</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java-source-version}</source>
+                    <target>${java-target-version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <version>3.8.1</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

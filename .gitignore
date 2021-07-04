@@ -1,0 +1,12 @@
+.idea/
+.idea/libraries
+.idea/*
+target/
+target/*
+.classpath
+.project
+public/
+*.iml
+*.log
+.settings/
+.settings/*
