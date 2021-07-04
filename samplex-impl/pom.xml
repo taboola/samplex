@@ -46,9 +46,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.databricks</groupId>
+            <groupId>org.apache.spark</groupId>
             <artifactId>spark-avro_${scala.version}</artifactId>
-            <version>4.0.0</version>
+            <version>${spark.version}</version>
         </dependency>
 
         <dependency>
@@ -58,8 +58,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.parquet</groupId>
-            <artifactId>parquet-avro-shaded</artifactId>
+            <groupId>com.taboola.shaded</groupId>
+            <artifactId>parquet-avro</artifactId>
             <version>1.11.1</version>
         </dependency>
 

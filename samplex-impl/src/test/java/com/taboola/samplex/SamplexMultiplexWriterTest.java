@@ -8,19 +8,19 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
-import org.apache.avro.SchemaBuilder.RecordBuilder;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.avro.SchemaConverters;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.databricks.spark.avro.SchemaConverters;
 import com.google.common.collect.ImmutableSet;
 import com.taboola.schemafilter.RecursiveIteratingSchemaWhitelistFilter;
 import com.taboola.schemafilter.TopLevelFieldsSchemaBlacklistFilter;
+
+import avro.shaded.org.apache.parquet.hadoop.metadata.CompressionCodecName;
 
 
 public class SamplexMultiplexWriterTest {
@@ -39,11 +39,16 @@ public class SamplexMultiplexWriterTest {
         final long sparkSqlExpected = nobelPrizeDf.filter("bornCountry == 'Russia'").count();
 
         // Create Avro schema, used to read from
-        RecordBuilder<Schema> recordBuilder = SchemaBuilder.record("spark_schema").namespace(null);
-        Schema dfAvroSchema = SchemaConverters.convertStructToAvro(nobelPrizeDf.schema(), recordBuilder, null);
+        Schema dfAvroSchema = SchemaConverters.toAvroType(nobelPrizeDf.schema(), false, "spark_schema", null);
 
         String samplexOutputFolder = temporaryFolder.newFolder("output").getPath();
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(samplexOutputFolder, "BornInRussia", bornInRussiaFilter, null);
+        SamplexJobSpecificContext specificContext = SamplexJobSpecificContext.builder()
+                .samplexFilter(bornInRussiaFilter)
+                .jobId("BornInRussia")
+                .outputPath(samplexOutputFolder)
+                .codecName(CompressionCodecName.SNAPPY)
+                .build();
+
         SamplexContext samplexContext = new SamplexContext(nobelPrizeDf.inputFiles()[0], Collections.singletonList(specificContext), dfAvroSchema.toString());
         samplexMultiplexWriter.call(Collections.singletonList(samplexContext).iterator());
 
@@ -60,15 +65,18 @@ public class SamplexMultiplexWriterTest {
 
         String samplexOutputFolder = temporaryFolder.newFolder("output").getPath();
 
-        RecordBuilder<Schema> recordBuilder = SchemaBuilder.record("spark_schema").namespace(null);
-        Schema dfAvroSchema = SchemaConverters.convertStructToAvro(nobelPrizeDf.schema(), recordBuilder, null);
+        Schema dfAvroSchema = SchemaConverters.toAvroType(nobelPrizeDf.schema(), false, "spark_schema", null);
 
         final String genderColumnToFilter = "gender";
         Set<String> blacklistFields = ImmutableSet.of(genderColumnToFilter);
 
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(
-                samplexOutputFolder, "BornInRussia",
-                bornInRussiaFilter, new TopLevelFieldsSchemaBlacklistFilter(blacklistFields));
+        SamplexJobSpecificContext specificContext = SamplexJobSpecificContext.builder()
+                .outputPath(samplexOutputFolder)
+                .samplexFilter(bornInRussiaFilter)
+                .schemaFilter(new TopLevelFieldsSchemaBlacklistFilter(blacklistFields))
+                .jobId("BornInRussia")
+                .codecName(CompressionCodecName.SNAPPY)
+                .build();
 
         SamplexContext samplexContext = new SamplexContext(nobelPrizeDf.inputFiles()[0], Collections.singletonList(specificContext), dfAvroSchema.toString());
         samplexMultiplexWriter.call(Collections.singletonList(samplexContext).iterator());
@@ -89,9 +97,7 @@ public class SamplexMultiplexWriterTest {
         final long sparkSqlExpected = nobelPrizeDf.filter("bornCountry == 'Russia'").count();
 
         String samplexOutputFolder = temporaryFolder.newFolder("output").getPath();
-
-        RecordBuilder<Schema> recordBuilder = SchemaBuilder.record("spark_schema").namespace(null);
-        Schema dfAvroSchema = SchemaConverters.convertStructToAvro(nobelPrizeDf.schema(), recordBuilder, null);
+        Schema dfAvroSchema = SchemaConverters.toAvroType(nobelPrizeDf.schema(), false, "spark_schema", null);
 
         // We will check whitelist filter with recursive
         final String onlyColumnToKeep = "prizes.category";
@@ -99,7 +105,7 @@ public class SamplexMultiplexWriterTest {
 
         SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(
                 samplexOutputFolder, "BornInRussia",
-                bornInRussiaFilter, new RecursiveIteratingSchemaWhitelistFilter(whitelistFields));
+                CompressionCodecName.SNAPPY, bornInRussiaFilter, new RecursiveIteratingSchemaWhitelistFilter(whitelistFields));
 
         SamplexContext samplexContext = new SamplexContext(nobelPrizeDf.inputFiles()[0], Collections.singletonList(specificContext), dfAvroSchema.toString());
         samplexMultiplexWriter.call(Collections.singletonList(samplexContext).iterator());
@@ -115,7 +121,10 @@ public class SamplexMultiplexWriterTest {
 
     @Test
     public void testGetFullOutputPath() {
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext("/output/path/", "analyzer", null, null);
+        SamplexJobSpecificContext specificContext = SamplexJobSpecificContext.builder()
+                .outputPath("/output/path/")
+                .jobId("analyzer")
+                .build();
         String fullOutputPath = samplexMultiplexWriter.getFullOutputPath("file.name", specificContext);
 
         String expectedOutputPath = "/output/path/file.name";

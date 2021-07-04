@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.apache.parquet</groupId>
-    <artifactId>parquet-avro-shaded</artifactId>
+    <groupId>com.taboola.shaded</groupId>
+    <artifactId>parquet-avro</artifactId>
     <version>1.11.1</version>
 
     <properties>

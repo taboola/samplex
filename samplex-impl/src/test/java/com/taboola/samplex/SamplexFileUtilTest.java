@@ -1,7 +1,5 @@
 package com.taboola.samplex;
 
-import static org.mockito.Mockito.mock;
-
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -12,8 +10,6 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import com.taboola.schemafilter.SchemaFilter;
 
 
 public class SamplexFileUtilTest {
@@ -31,8 +27,8 @@ public class SamplexFileUtilTest {
 
         String outputFolder1 = folder.newFolder("output1").getPath();
         String outputFolder2 = folder.newFolder("output2").getPath();
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(outputFolder1, "job1", null,mock(SchemaFilter.class));
-        SamplexJobSpecificContext specificContext2 = new SamplexJobSpecificContext(outputFolder2, "job2", null,mock(SchemaFilter.class));
+        SamplexJobSpecificContext specificContext = SamplexJobSpecificContext.builder().outputPath(outputFolder1).jobId("job1").build();
+        SamplexJobSpecificContext specificContext2 = SamplexJobSpecificContext.builder().outputPath(outputFolder2).jobId("job2").build();
         SamplexFileUtil.writeSuccessFiles(Arrays.asList(specificContext, specificContext2), fileSystem);
 
         Assert.assertTrue(fileSystem.exists(new Path(outputFolder1 + "/_SUCCESS")));
@@ -50,10 +46,10 @@ public class SamplexFileUtilTest {
 
         String outputFolder1 = folder.newFolder("output_remove_1").getPath();
         String outputFolder2 = folder.newFolder("output_remove_2").getPath();
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(outputFolder1, "job1", null,mock(SchemaFilter.class));
-        SamplexJobSpecificContext specificContext2 = new SamplexJobSpecificContext(outputFolder2, "job2", null,mock(SchemaFilter.class));
+        SamplexJobSpecificContext specificContext = SamplexJobSpecificContext.builder().outputPath(outputFolder1).jobId("job1").build();
+        SamplexJobSpecificContext specificContext2 = SamplexJobSpecificContext.builder().outputPath(outputFolder2).jobId("job2").build();
         String fakeOutputPath = "/some/fake/folder";
-        SamplexJobSpecificContext specificContext3 = new SamplexJobSpecificContext(fakeOutputPath, "job2", null,mock(SchemaFilter.class));
+        SamplexJobSpecificContext specificContext3 = SamplexJobSpecificContext.builder().outputPath(fakeOutputPath).jobId("job2").build();
 
         Assert.assertTrue(fileSystem.exists(new Path(outputFolder1)));
         Assert.assertTrue(fileSystem.exists(new Path(outputFolder2)));
@@ -83,8 +79,9 @@ public class SamplexFileUtilTest {
         String out2_file1 = folder.newFile("dup_test2/part-00001-00.snappy.parquet").getPath();
         String out2_file2 = folder.newFile("dup_test2/part-00002-00.snappy.parquet").getPath();
 
-        SamplexJobSpecificContext specificContext = new SamplexJobSpecificContext(outputFolder1, "job1", null,mock(SchemaFilter.class));
-        SamplexJobSpecificContext specificContext2 = new SamplexJobSpecificContext(outputFolder2, "job2", null,mock(SchemaFilter.class));
+        SamplexJobSpecificContext specificContext = SamplexJobSpecificContext.builder().outputPath(outputFolder1).jobId("job1").build();
+
+        SamplexJobSpecificContext specificContext2 = SamplexJobSpecificContext.builder().outputPath(outputFolder2).jobId("job2").build();
 
         Configuration configuration = new Configuration();
         FileSystem fs = FileSystem.get(configuration);

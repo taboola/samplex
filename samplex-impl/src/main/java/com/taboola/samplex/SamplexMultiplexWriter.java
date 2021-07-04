@@ -85,15 +85,17 @@ public class SamplexMultiplexWriter implements VoidFunction<Iterator<SamplexCont
     }
 
     private List<SamplexWriterData> createSamplexWriterLists(List<SamplexContext> samplexContexts) {
-        int attemptNum = null == TaskContext.get() ? 0 : TaskContext.get().attemptNumber();
-        String fileName = SamplexFileUtil.createTaskFileName(TaskContext.getPartitionId(), attemptNum);
         SamplexContext samplexContext = samplexContexts.get(0);
         return samplexContext.getSamplexJobSpecificContextList().stream()
-                .map(samplexSpecificContext -> getSamplexWriterData(samplexSpecificContext, samplexContext.getAvroSchema(), getFullOutputPath(fileName, samplexSpecificContext)))
+                .map(samplexSpecificContext -> {
+                    int attemptNum = null == TaskContext.get() ? 0 : TaskContext.get().attemptNumber();
+                    String fileName = SamplexFileUtil.createTaskFileName(TaskContext.getPartitionId(), attemptNum, samplexSpecificContext.getCodecName());
+                    return createSamplexWriterData(samplexSpecificContext, samplexContext.getAvroSchema(), getFullOutputPath(fileName, samplexSpecificContext));
+                })
                 .collect(Collectors.toList());
     }
 
-    private SamplexWriterData getSamplexWriterData(SamplexJobSpecificContext samplexSpecificContext, String explodedPageViewSchema, String outputFile) {
+    private SamplexWriterData createSamplexWriterData(SamplexJobSpecificContext samplexSpecificContext, String explodedPageViewSchema, String outputFile) {
         String recordSchema = explodedPageViewSchema;
         boolean useFieldNameModel = false;
 
@@ -103,13 +105,15 @@ public class SamplexMultiplexWriter implements VoidFunction<Iterator<SamplexCont
            useFieldNameModel = true;
         }
 
-        return new SamplexWriterData(
-                samplexSpecificContext.getSamplexFilter(),
-                samplexSpecificContext.getJobId(),
-                new ArrayBlockingQueue<>(MAX_QUEUE_SIZE),
-                recordSchema,
-                outputFile,
-                useFieldNameModel);
+        return SamplexWriterData.builder()
+                .samplexFilter(samplexSpecificContext.getSamplexFilter())
+                .blockingQueue(new ArrayBlockingQueue<>(MAX_QUEUE_SIZE))
+                .outputFile(outputFile)
+                .recordSchema(recordSchema)
+                .codecName(samplexSpecificContext.getCodecName())
+                .jobId(samplexSpecificContext.getJobId())
+                .useFieldNameModel(useFieldNameModel)
+                .build();
     }
 
     String getFullOutputPath(String fileName, SamplexJobSpecificContext jobSpecificContext) {

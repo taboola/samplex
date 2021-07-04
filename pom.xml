@@ -16,6 +16,9 @@
         <java-source-version>1.8</java-source-version>
         <java-target-version>1.8</java-target-version>
         <log4j2.version>2.14.0</log4j2.version>
+        <spark.version>3.1.2</spark.version>
+        <scala.version>2.12</scala.version>
+        <hadoop.client.version>3.2.1</hadoop.client.version>
     </properties>
 
     <modules>
@@ -23,53 +26,6 @@
         <module>samplex-impl</module>
         <module>schema-filter</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <property>
-                    <name>!spark</name>
-                </property>
-            </activation>
-            <properties>
-                <spark.version>2.2.3</spark.version>
-                <scala.version>2.11</scala.version>
-                <hadoop.client.version>2.7.3</hadoop.client.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>spark-2.2.3</id>
-            <activation>
-                <property>
-                    <name>spark</name>
-                    <value>2.2</value>
-                </property>
-            </activation>
-            <properties>
-                <spark.version>2.2.3</spark.version>
-                <scala.version>2.11</scala.version>
-                <hadoop.client.version>2.7.3</hadoop.client.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>spark-3.0.1</id>
-            <activation>
-                <property>
-                    <name>spark</name>
-                    <value>3.0</value>
-                </property>
-            </activation>
-            <properties>
-                <spark.version>3.0.1</spark.version>
-                <scala.version>2.12</scala.version>
-                <hadoop.client.version>3.2.1</hadoop.client.version>
-            </properties>
-        </profile>
-    </profiles>
-
 
     <build>
         <plugins>

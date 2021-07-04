@@ -12,8 +12,7 @@ to optimize resource usages for saving sub-sets of huge data by different teams.
 When working with extremely big inputs of raw data, it is often needed to create
 a sub-set of it in order to keep work more efficient downstream or to keep the relevant sub-set with longer retention.
 
-Usually, when working with Parquet data in Spark 
-when you want to create different sub-sets of your data you will do following:
+The naive and straightforward approach would be to produce different subsets of the data, by reading the source data frame and then save the data multiple times with multiple predefined filters, as in the following example
 
 ```java
 // Assuming you have SparkSession as `spark` variable
@@ -25,12 +24,15 @@ df.filter(col("age").gt(21)).write().parquet("fs://path/to/your/sub-set1");
 df.filter("salary < 10000").write().parquet("fs://path/to/your/sub-set2");
 ...
 ```
-Usually such operations will require from Spark to scan the data number of times as number of save actions.
-Yes, when you have your input dataframe saved in ordered or/and bucketed format it may perform faster,
-but you can't predict by which filter users of the data will filter this data tomorrow.  
+In Spark, every write action would trigger the entire DAG for that action, 
+so it will require Spark to scan the whole data several times as a number of write actions.
 
-Additionally, it is possible to cache the data to Spark storage to perform further operations quicker,
-but let's not forget we are dealing with huge amounts of data and this will be a costly operation by itself.
+Cache may help when the input data is small comparing to executor memory and disk resources.
+
+In addition, each subset produced, might benefit from predicate push-downs and other storage optimizations
+to avoid reading the entire data, but with many filters, and over very complex schema, we can’t really store the full data optimized for every read path,
+without keeping different projections of the full data.
+
 
 ## Usage
 
@@ -80,6 +82,9 @@ input files metadata and SamplexJob to executors.
 
 Each executor reading each row of the Parquet file with `AvroParquetReader` applies
 filters defined in Samplex and writing relevant rows to output paths with `AvroParquetWriter`
+
+We need to use org.apache.parquet:parquet-avro:1.11.1 version to solve following [bug](https://issues.apache.org/jira/browse/PARQUET-1441).
+Unfortunately, this version is not used in the latest Spark versions, yet, so we shaded it. 
 
 ## Configure
 

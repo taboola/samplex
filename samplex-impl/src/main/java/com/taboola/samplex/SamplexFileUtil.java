@@ -18,12 +18,13 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+import avro.shaded.org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import io.vavr.CheckedConsumer;
 import io.vavr.CheckedFunction1;
 
 class SamplexFileUtil {
 
-    private final static Pattern ATTEMPT_PATTERN = Pattern.compile("^.*part-\\d+-(\\d+).snappy.parquet$");
+    private final static String ATTEMPT_REGEX_STRING = "^.*part-\\d+-(\\d+).[a-z0-9]+.parquet$";
 
     private static String getFilePrefixWithoutAttemptNumber(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf("-"));
@@ -42,7 +43,7 @@ class SamplexFileUtil {
 
 
     private static int extractAttemptIdFromFileName(String fileName) {
-        Matcher matcher = ATTEMPT_PATTERN.matcher(fileName);
+        Matcher matcher = Pattern.compile(ATTEMPT_REGEX_STRING).matcher(fileName);
         if (matcher.matches()) {
             return Integer.parseInt(matcher.group(1));
         } else {
@@ -89,7 +90,7 @@ class SamplexFileUtil {
                 .forEach(checkedCreateFunction.unchecked());
     }
 
-    static String createTaskFileName(int taskId, int attemptNum) {
-        return String.format("part-%05d-%02d.snappy.parquet", taskId, attemptNum);
+    static String createTaskFileName(int taskId, int attemptNum, CompressionCodecName codecName) {
+        return String.format("part-%05d-%02d.%s.parquet", taskId, attemptNum, codecName.name().toLowerCase());
     }
 }

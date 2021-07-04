@@ -2,29 +2,18 @@ package com.taboola.samplex;
 
 import java.util.concurrent.BlockingQueue;
 
+import avro.shaded.org.apache.parquet.hadoop.metadata.CompressionCodecName;
+import lombok.Builder;
 import lombok.Value;
 
 @Value
+@Builder
 public class SamplexWriterData {
-
     String jobId;
     String recordSchema;
     String outputFile;
     boolean useFieldNameModel;
     SamplexFilter samplexFilter;
+    CompressionCodecName codecName;
     BlockingQueue<SamplexRecord> blockingQueue;
-
-    SamplexWriterData(
-            SamplexFilter samplexFilter,
-            String jobId,
-            BlockingQueue<SamplexRecord> blockingQueue,
-            String recordSchema,
-            String outputFile, boolean useFieldNameModel) {
-        this.samplexFilter = samplexFilter;
-        this.jobId = jobId;
-        this.blockingQueue = blockingQueue;
-        this.recordSchema = recordSchema;
-        this.outputFile = outputFile;
-        this.useFieldNameModel = useFieldNameModel;
-    }
 }

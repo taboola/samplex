@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableSet;
 import com.taboola.schemafilter.SchemaFilter;
 import com.taboola.schemafilter.TopLevelFieldsSchemaWhitelistFilter;
 
+import avro.shaded.org.apache.parquet.hadoop.metadata.CompressionCodecName;
+
 public class SamplexExecutorTest {
 
     @Rule
@@ -56,6 +58,11 @@ public class SamplexExecutorTest {
             @Override
             public String getDestinationFolder() {
                 return diedInGBDestPath;
+            }
+
+            @Override
+            public CompressionCodecName getParquetCompressionCodecName() {
+                return CompressionCodecName.GZIP;
             }
 
             @Override
