@@ -84,6 +84,5 @@ Unfortunately, this version is not used in the latest Spark versions, yet, so we
 ## Configure
 
 - You should have your output `FileSystem` configuration installed on your Spark executors 
-- In order to fully utilise Samplex potential 
-  it is better to have (number of input files) >= `spark.default.parallelism`
+- In order to fully utilise Samplex potential it is better to have (number of input files) >= `spark.default.parallelism`
 - In case of load average is too high on executors, increase the number of CPUs per task `spark.task.cpus` 
